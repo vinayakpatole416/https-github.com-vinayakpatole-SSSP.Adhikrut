@@ -33,12 +33,10 @@ header {
 }
 
 .site-logo {
-    width: 55px !important;
-    height: 55px !important;
-    max-width: 55px !important;
-    max-height: 55px !important;
+    width: 60px !important;
+    height: 60px !important;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 6px;
     border: 2px solid var(--accent-yellow);
     background-color: var(--white);
     flex-shrink: 0;
@@ -46,7 +44,7 @@ header {
 
 .logo-text h1 {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     color: var(--accent-yellow);
     line-height: 1.2;
 }
@@ -54,11 +52,12 @@ header {
 .logo-text p {
     margin: 2px 0;
     font-size: 0.8rem;
+    color: var(--white);
 }
 
-.motto {
+.tagline {
     font-size: 0.75rem !important;
-    color: #FFC107;
+    color: var(--accent-yellow) !important;
     font-weight: bold;
 }
 
@@ -68,22 +67,20 @@ nav ul {
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
 }
 
 nav a {
     color: var(--white);
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     padding: 4px 8px;
     border-radius: 4px;
-    background: rgba(255,255,255,0.1);
 }
 
 nav a:hover {
-    background: var(--primary-saffron);
-    color: var(--white);
+    color: var(--accent-yellow);
 }
 
 main {
@@ -104,27 +101,18 @@ main {
 h2 {
     color: var(--navy-blue);
     margin-top: 0;
-    font-size: 1.25rem;
+    font-size: 1.3rem;
 }
 
 .form-group {
     margin-bottom: 12px;
 }
 
-.form-row {
-    display: flex;
-    gap: 10px;
-}
-
-.form-row .form-group {
-    flex: 1;
-}
-
 .form-group label {
     display: block;
     margin-bottom: 4px;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
 }
 
 .form-group input, .form-group select {
@@ -133,16 +121,6 @@ h2 {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 0.9rem;
-}
-
-.checkbox {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.checkbox input {
-    width: auto;
 }
 
 .btn {
@@ -157,11 +135,21 @@ h2 {
     width: 100%;
 }
 
+.btn-small {
+    background-color: var(--navy-blue);
+    color: var(--white);
+    border: none;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
 .btn-navy {
     background-color: var(--navy-blue);
 }
 
-.btn:hover {
+.btn:hover, .btn-small:hover {
     opacity: 0.9;
 }
 
@@ -169,8 +157,7 @@ h2 {
     margin-top: 12px;
     padding: 10px;
     border-radius: 4px;
-    display: none;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
 }
 
 .success {
