@@ -5,13 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>श्री शिवमल्हार स्वराज्य प्रतिष्ठान - विश्वस्त संस्था (SSSP Adhikrut)</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDKs for Automatic Cloud Database -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
     <header>
-        <div class="aapla_pratishthan-20260816-0001.jpg">
-            <h1>श्री शिवमल्हार स्वराज्य प्रतिष्ठान</h1>
-            <p>विश्वस्त संस्था | SSSP Adhikrut Portal</p>
+        <div class="logo-container">
+            <!-- लोगोची इमेज जोडली आहे -->
+            <img src="aapla_pratishthan-20260816-0001.jpg" alt="श्री शिवमल्हार स्वराज्य प्रतिष्ठान लोगो" class="site-logo">
+            <div class="logo-text">
+                <h1>श्री शिवमल्हार स्वराज्य प्रतिष्ठान</h1>
+                <p>विश्वस्त संस्था | SSSP Adhikrut Portal</p>
+            </div>
         </div>
         <nav>
             <ul>
@@ -21,16 +28,19 @@
                 <li><a href="#status">अर्जाची स्थिती तपासा</a></li>
                 <li><a href="#contact">संपर्क</a></li>
                 <li><a href="#privacy">गोपनीयता धोरण</a></li>
+                <li><a href="#admin" style="color: var(--accent-yellow);">ॲडमिन लॉगिन</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
+        <!-- Home Section -->
         <section id="home" class="card">
             <h2>संस्थेचे अधिकृत पोर्टल</h2>
             <p>संस्थेचे संघटनात्मक, प्रशासकीय, सामाजिक व जनकल्याणकारी कार्यासाठी अधिकृत डिजिटल व्यासपीठ.</p>
         </section>
 
+        <!-- Membership Registration Form -->
         <section id="register" class="card">
             <h2>सदस्यत्व नोंदणी अर्ज</h2>
             <form id="membershipForm">
@@ -107,11 +117,12 @@
                     <label for="consent">मी संस्थेचे संविधान व नियम पाळण्यास संमती देतो/देते.</label>
                 </div>
 
-                <button type="submit" class="btn">अर्ज सादर करा</button>
+                <button type="submit" class="btn" id="submitBtn">अर्ज सादर करा</button>
             </form>
             <div id="applicationResult" class="result-box"></div>
         </section>
 
+        <!-- Status Check Section -->
         <section id="status" class="card">
             <h2>अर्जाची स्थिती तपासा</h2>
             <div class="form-group">
@@ -122,17 +133,37 @@
             <div id="statusResult" class="result-box"></div>
         </section>
 
+        <!-- Admin Section -->
+        <section id="admin" class="card">
+            <h2>संस्थापक / प्रशासक डॅशबोर्ड</h2>
+            <div id="adminLoginArea">
+                <div class="form-group">
+                    <label>ॲडमिन पासवर्ड टाका:</label>
+                    <input type="password" id="adminPass" placeholder="Password">
+                </div>
+                <button onclick="adminLogin()" class="btn">लॉगिन करा</button>
+            </div>
+            <div id="adminDashboard" style="display:none; margin-top:15px;">
+                <h3>प्राप्त झालेले सदस्य अर्ज</h3>
+                <button onclick="loadAdminApplications()" class="btn" style="background:#12345A; margin-bottom:10px;">यादी रिफ्रेश करा</button>
+                <div id="adminTableContainer" style="overflow-x:auto;"></div>
+            </div>
+        </section>
+
+        <!-- About Section -->
         <section id="about" class="card">
             <h2>संस्थेविषयी</h2>
             <p><strong>श्री शिवमल्हार स्वराज्य प्रतिष्ठान — विश्वस्त संस्था</strong></p>
             <p>संस्था समाजसेवा, जनकल्याण, शिक्षण, कौशल्यविकास आणि सामाजिक घटकांच्या सक्षमीकरणासाठी कार्यरत आहे.</p>
         </section>
 
+        <!-- Contact Section -->
         <section id="contact" class="card">
             <h2>संपर्क</h2>
             <p>अधिकृत चौकशी आणि संवादासाठी कृपया संस्थेच्या मध्यवर्ती कार्यालयाशी संपर्क साधावा.</p>
         </section>
 
+        <!-- Privacy Policy Section -->
         <section id="privacy" class="card">
             <h2>गोपनीयता धोरण</h2>
             <p>अर्जदारांची माहिती केवळ संस्थेच्या प्रशासकीय वापरासाठी सुरक्षित ठेवली जाते.</p>
