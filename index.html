@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>श्री शिवमल्हार स्वराज्य प्रतिष्ठान - विश्वस्त संस्था (SSSP Adhikrut)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="logo-container">
+            <h1>श्री शिवमल्हार स्वराज्य प्रतिष्ठान</h1>
+            <p>विश्वस्त संस्था | SSSP Adhikrut Portal</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">मुख्यपृष्ठ</a></li>
+                <li><a href="#about">संस्थेविषयी</a></li>
+                <li><a href="#register">सदस्यत्व नोंदणी अर्ज</a></li>
+                <li><a href="#status">अर्जाची स्थिती तपासा</a></li>
+                <li><a href="#contact">संपर्क</a></li>
+                <li><a href="#privacy">गोपनीयता धोरण</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="card">
+            <h2>जी आणि संस्थेचे अधिकृत पोर्टल</h2>
+            <p>संस्थेचे संघटनात्मक, प्रशासकीय, सामाजिक व जनकल्याणकारी कार्यासाठी अधिकृत डिजिटल व्यासपीठ.</p>
+        </section>
+
+        <!-- Membership Registration Form -->
+        <section id="register" class="card">
+            <h2>सदस्यत्व नोंदणी अर्ज</h2>
+            <form id="membershipForm">
+                <div class="form-group">
+                    <label>संपूर्ण नाव *</label>
+                    <input type="text" id="fullName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>वडिलांचे / पतीचे नाव (ऐच्छिक)</label>
+                    <input type="text" id="parentName">
+                </div>
+
+                <div class="form-group">
+                    <label>जन्मतारीख *</label>
+                    <input type="date" id="dob" required>
+                </div>
+
+                <div class="form-group">
+                    <label>मोबाईल क्रमांक *</label>
+                    <input type="tel" id="mobile" pattern="[0-9]{10}" placeholder="१० अंकी मोबाईल नंबर" required>
+                </div>
+
+                <div class="form-group">
+                    <label>ईमेल *</label>
+                    <input type="email" id="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label>गाव *</label>
+                    <input type="text" id="village" required>
+                </div>
+
+                <div class="form-group">
+                    <label>तालुका *</label>
+                    <input type="text" id="taluka" required>
+                </div>
+
+                <div class="form-group">
+                    <label>जिल्हा *</label>
+                    <input type="text" id="district" required>
+                </div>
+
+                <div class="form-group">
+                    <label>राज्य *</label>
+                    <input type="text" id="state" value="महाराष्ट्र" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>पिन कोड *</label>
+                    <input type="text" id="pincode" pattern="[0-9]{6}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>सदस्यत्वाचा प्रकार निवडा *</label>
+                    <select id="membershipCategory" required>
+                        <option value="">-- सदस्यत्वाचा प्रकार निवडा --</option>
+                        <option value="प्राथमिक सदस्य">१. प्राथमिक सदस्य</option>
+                        <option value="सर्वसाधारण सदस्य">२. सर्वसाधारण सदस्य</option>
+                        <option value="सक्रिय सदस्य">३. सक्रिय सदस्य</option>
+                        <option value="कार्यकर्ता सदस्य">४. कार्यकर्ता सदस्य</option>
+                        <option value="पदाधिकारी">५. पदाधिकारी</option>
+                        <option value="विद्यार्थी सदस्य">६. विद्यार्थी सदस्य</option>
+                        <option value="महिला सदस्य">७. महिला सदस्य</option>
+                        <option value="कन्या सदस्य">८. कन्या सदस्य</option>
+                        <option value="शेतकरी सदस्य">९. शेतकरी सदस्य</option>
+                        <option value="कामगार सदस्य">१०. कामगार सदस्य</option>
+                        <option value="प्रशासकीय सदस्य">११. प्रशासकीय सदस्य</option>
+                    </select>
+                </div>
+
+                <div class="form-group checkbox">
+                    <input type="checkbox" id="consent" required>
+                    <label for="consent">मी संस्थेचे संविधान व नियम पाळण्यास संमती देतो/देते.</label>
+                </div>
+
+                <button type="submit" class="btn">अर्ज सादर करा</button>
+            </form>
+            <div id="applicationResult" class="result-box"></div>
+        </section>
+
+        <!-- Status Check Section -->
+        <section id="status" class="card">
+            <h2>अर्जाची स्थिती तपासा</h2>
+            <div class="form-group">
+                <label>अर्ज संदर्भ क्रमांक (Application Reference Number):</label>
+                <input type="text" id="refNumber" placeholder="उदा. SSSP-REF-123456">
+            </div>
+            <button onclick="checkStatus()" class="btn">स्थिती तपासा</button>
+            <div id="statusResult" class="result-box"></div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="card">
+            <h2>संस्थेविषयी</h2>
+            <p><strong>श्री शिवमल्हार स्वराज्य प्रतिष्ठान — विश्वस्त संस्था</strong></p>
+            <p>संस्था समाजसेवा, जनकल्याण, शिक्षण, कौशल्यविकास आणि सामाजिक घटकांच्या सक्षमीकरणासाठी कार्यरत आहे.</p>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="card">
+            <h2>संपर्क</h2>
+            <p>अधिकृत चौकशी आणि संवादासाठी कृपया संस्थेच्या मध्यवर्ती कार्यालयाशी संपर्क साधावा.</p>
+        </section>
+
+        <!-- Privacy Policy Section -->
+        <section id="privacy" class="card">
+            <h2>गोपनीयता धोरण</h2>
+            <p>अर्जदारांची माहिती केवळ संस्थेच्या प्रशासकीय वापरासाठी सुरक्षित ठेवली जाते.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 श्री शिवमल्हार स्वराज्य प्रतिष्ठान - विश्वस्त संस्था. सर्व हक्क सुरक्षित.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
