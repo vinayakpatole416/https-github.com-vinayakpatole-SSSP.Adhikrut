@@ -1,4 +1,4 @@
-// तात्पुरता साठा (Local Storage)
+// तात्पुरता साठा (Local Storage & OTP Simulation)
 let generatedMobOtp = "";
 let generatedEmailOtp = "";
 
@@ -17,7 +17,7 @@ function sendSupremeOtp() {
     }
 
     generatedMobOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    alert(`[टेस्टिंग संदेश] आपल्या मोबाईल आणि जिमेल वर OTP पाठवला आहे: ${generatedMobOtp}`);
+    alert(`[अधिकृत सुरक्षा OTP] आपल्या मोबाईल आणि जिमेल वर OTP पाठवला आहे: ${generatedMobOtp}`);
     document.getElementById('supOtpArea').style.display = 'block';
 }
 
@@ -51,7 +51,7 @@ function sendPadOtp() {
     }
 
     generatedMobOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    alert(`[पदाधिकारी] OTP पाठवला आहे: ${generatedMobOtp}`);
+    alert(`[पदाधिकारी OTP] पाठवला आहे: ${generatedMobOtp}`);
     document.getElementById('padOtpArea').style.display = 'block';
 }
 
@@ -76,7 +76,7 @@ function logoutPad() {
 function sendRegMobileOtp() {
     const mob = document.getElementById('regMobile').value;
     if (mob.length !== 10) {
-        alert('कृपया योग्य १० अंकी मोबाईल नंबर टाка.');
+        alert('कृपया योग्य १० अंकी मोबाईल नंबर टाका.');
         return;
     }
     generatedMobOtp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -116,7 +116,7 @@ function verifyRegEmailOtp() {
     }
 }
 
-// नवीन सदस्य नोंदणी फॉर्म सबमिट
+// नवीन सदस्य नोंदणी फॉर्म सबमिट आणि स्वयंचलित क्रमांक निर्मिती
 document.getElementById('membershipForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -132,7 +132,7 @@ document.getElementById('membershipForm').addEventListener('submit', function(e)
     let allMembers = JSON.parse(localStorage.getItem('sssp_all_members') || '[]');
     let seq = String(allMembers.length + 1).padStart(6, '0');
 
-    // संविधानानुसार कायमस्वरूपी सभासद क्रमांक फॉरमॅट
+    // संविधान नियमांनुसार कायमस्वरूपी सभासद क्रमांक फॉरमॅट: SSSP-YYYY-LL-VVV-NNNNNN
     const permanentId = `SSSP-${currentYear}-${lokSabhaVal}-${vidhanSabhaVal}-${seq}`;
 
     const newMember = {
@@ -167,7 +167,7 @@ document.getElementById('membershipForm').addEventListener('submit', function(e)
     loadAllMembersTable();
 });
 
-// सदस्य शोधणे
+// सदस्य शोधणे (Search Member)
 function searchMember() {
     const query = document.getElementById('searchMemberId').value.trim();
     const resultDiv = document.getElementById('searchResult');
