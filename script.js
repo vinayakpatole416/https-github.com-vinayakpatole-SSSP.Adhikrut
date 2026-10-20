@@ -9,7 +9,6 @@ document.getElementById('membershipForm').addEventListener('submit', function(e)
     let allMembers = JSON.parse(localStorage.getItem('sssp_all_members') || '[]');
     let seq = String(allMembers.length + 1).padStart(6, '0');
 
-    // Samvidhan niyamnusar temporary reference ID
     const refId = `SSSP-REF-${Math.floor(100000 + Math.random() * 900000)}`;
 
     const newMember = {
@@ -43,13 +42,11 @@ document.getElementById('membershipForm').addEventListener('submit', function(e)
     this.reset();
 });
 
-// Admin Dashboard vrun Approval dilyanantar Digital Card Generate hone
 function approveMemberAndSendCard(index) {
     let allMembers = JSON.parse(localStorage.getItem('sssp_all_members') || '[]');
     let currentYear = new Date().getFullYear();
     let seq = String(index + 1).padStart(6, '0');
     
-    // Aadhar sarkha permanent ID format: SSSP-YYYY-LL-VVV-NNNNNN
     let permNo = `SSSP-${currentYear}-34-205-${seq}`;
 
     allMembers[index].status = "Manjur (Approved)";
@@ -57,14 +54,12 @@ function approveMemberAndSendCard(index) {
 
     localStorage.setItem('sssp_all_members', JSON.stringify(allMembers));
 
-    // Simulation: Email & SMS notification with card download link
     const member = allMembers[index];
     alert(`[AUTOMATIC SMS & EMAIL SENT] \nPrati: ${member.mobile} & ${member.email}\nTumcha arj manjur zala ahe!\nSabhasad Kramank: ${permNo}\nDigital Card Download Link: https://vinayakpatole416.github.io/card/${permNo}`);
 
     loadAdminDashboardTable();
 }
 
-// Aadhaar sarkha Digital Card View & Download karnyachi function
 function generateAadhaarStyleCard(memberId) {
     let allMembers = JSON.parse(localStorage.getItem('sssp_all_members') || '[]');
     let member = allMembers.find(m => m.memberId === memberId);
@@ -74,7 +69,6 @@ function generateAadhaarStyleCard(memberId) {
         return;
     }
 
-    // Yenaare digital card Aadhaar sarkha disel (Bhagva & Navy blue theme)
     const cardWindow = window.open('', '_blank');
     cardWindow.document.write(`
         <html lang="mr">
@@ -119,7 +113,7 @@ function generateAadhaarStyleCard(memberId) {
         </html>
     `);
 }
-// Firebase Configuration (तुमच्या Firebase अकाउंटची माहिती इथे टाकावी लागेल)
+
 const firebaseConfig = {
     apiKey: "YOUR_FIREBASE_API_KEY",
     authDomain: "sssp-adhikrut.firebaseapp.com",
@@ -133,7 +127,6 @@ if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-// RecaptchaVerifier for Phone Auth
 window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
     'size': 'invisible'
 });
@@ -141,8 +134,9 @@ window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-contai
 let confirmationResultGlobal = null;
 let regMobVerified = false;
 let regEmailVerified = false;
+let generatedMobOtp = "";
+let generatedEmailOtp = "";
 
-// १. मोबाईलवर खरा SMS OTP पाठवणे (Firebase Phone Auth)
 function sendRegMobileOtp() {
     const mobileNum = document.getElementById('regMobile').value;
     if (mobileNum.length !== 10) {
@@ -159,23 +153,37 @@ function sendRegMobileOtp() {
             alert('तुमच्या मोबाईलवर खरा SMS OTP पाठवण्यात आला आहे!');
             document.getElementById('regMobOtpBox').style.display = 'block';
         }).catch((error) => {
-            console.error("SMS पाठवताना त्रुटी: ", error);
-            alert('SMS पाठवण्यात अपयश आले. कृपया पुन्हा प्रयत्न करा.');
+            console.error("SMS truti: ", error);
+            generatedMobOtp = Math.floor(100000 + Math.random() * 900000).toString();
+            alert(`[Backup OTP]: ${generatedMobOtp}`);
+            document.getElementById('regMobOtpBox').style.display = 'block';
         });
 }
 
-// मोबाईल OTP पडताळणी
 function verifyRegMobOtp() {
     const code = document.getElementById('regMobOtpInput').value;
-    confirmationResultGlobal.confirm(code).then((result) => {
-        regMobVerified = true;
-        alert('मोबाईल नंबर यशस्वीरीत्या सत्यापित (Verified) झाला!');
-    }).catch((error) => {
-        alert('चुकीचा OTP! कृपया पुन्हा तपासा.');
-    });
+    if (confirmationResultGlobal) {
+        confirmationResultGlobal.confirm(code).then((result) => {
+            regMobVerified = true;
+            alert('मोबाईल नंबर यशस्वीरीत्या सत्यापित (Verified) झाला!');
+        }).catch((error) => {
+            if (code === generatedMobOtp) {
+                regMobVerified = true;
+                alert('मोबाईल नंबर यशस्वीरीत्या सत्यापित (Verified) झाला!');
+            } else {
+                alert('चुकीचा OTP! कृपया पुन्हा तपासा.');
+            }
+        });
+    } else {
+        if (code === generatedMobOtp) {
+            regMobVerified = true;
+            alert('मोबाईल नंबर यशस्वीरीत्या सत्यापित (Verified) झाला!');
+        } else {
+            alert('चुकीचा OTP!');
+        }
+    }
 }
 
-// २. जिमेलवर (Gmail) खरा OTP पाठवणे (EmailJS द्वारे)
 function sendRegEmailOtp() {
     const email = document.getElementById('regEmail').value;
     if (!email) {
@@ -185,28 +193,17 @@ function sendRegEmailOtp() {
 
     const randomOtp = Math.floor(100000 + Math.random() * 900000).toString();
     localStorage.setItem('temp_email_otp', randomOtp);
+    generatedEmailOtp = randomOtp;
 
-    // EmailJS द्वारे थेट जिमेलवर मेल पाठवणे
-    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-        to_email: email,
-        otp_code: randomOtp
-    }, "YOUR_PUBLIC_KEY")
-    .then((response) => {
-        alert('तुमच्या जिमेल (Gmail) पत्त्यावर OTP पाठवण्यात आला आहे!');
-        document.getElementById('regEmailOtpBox').style.display = 'block';
-    }, (error) => {
-        // जर EmailJS सेट नसेल तर इमर्जन्सीसाठी लोकल अलर्ट
-        alert(`[जिमेल OTP]: ${randomOtp} (EmailJS कॉन्फिगर करा)`);
-        document.getElementById('regEmailOtpBox').style.display = 'block';
-    });
+    alert(`[इमेल OTP]: ${randomOtp}`);
+    document.getElementById('regEmailOtpBox').style.display = 'block';
 }
 
-// ईमेल OTP पडताळणी
 function verifyRegEmailOtp() {
     const userOtp = document.getElementById('regEmailOtpInput').value;
     const savedOtp = localStorage.getItem('temp_email_otp');
 
-    if (userOtp === savedOtp) {
+    if (userOtp === savedOtp || userOtp === generatedEmailOtp) {
         regEmailVerified = true;
         alert('ईमेल यशस्वीरीत्या सत्यापित (Verified) झाला!');
     } else {
@@ -214,61 +211,6 @@ function verifyRegEmailOtp() {
     }
 }
 
-// ३. नवीन सदस्य नोंदणी आणि कायमस्वरूपी क्रमांक निर्मिती
-document.getElementById('membershipForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    if (!regMobVerified || !regEmailVerified) {
-        alert('कृपया फॉर्म भरण्यापूर्वी मोबाईल आणि ईमेलची OTP पडताळणी पूर्ण करा!');
-        return;
-    }
-
-    const currentYear = new Date().getFullYear();
-    const lokSabhaVal = document.getElementById('lokSabhaSelect').value.split('-')[0] || '33';
-    const vidhanSabhaVal = document.getElementById('vidhanSabhaSelect').value.split('-')[0] || '205';
-    
-    let allMembers = JSON.parse(localStorage.getItem('sssp_all_members') || '[]');
-    let seq = String(allMembers.length + 1).padStart(6, '0');
-
-    // संविधान नियमांनुसार कायमस्वरूपी सभासद क्रमांक
-    const permanentId = `SSSP-${currentYear}-${lokSabhaVal}-${vidhanSabhaVal}-${seq}`;
-
-    const newMember = {
-        memberId: permanentId,
-        fullName: document.getElementById('fullName').value,
-        mobile: document.getElementById('regMobile').value,
-        email: document.getElementById('regEmail').value,
-        category: document.getElementById('membershipCategory').value,
-        district: document.getElementById('districtSelect').value,
-        taluka: document.getElementById('talukaSelect').value,
-        village: document.getElementById('villageName').value,
-        date: new Date().toLocaleDateString('mr-IN')
-    };
-
-    allMembers.push(newMember);
-    localStorage.setItem('sssp_all_members', JSON.stringify(allMembers));
-
-    const resBox = document.getElementById('regResultBox');
-    resBox.style.display = 'block';
-    resBox.className = 'result-box success';
-    resBox.innerHTML = `
-        <strong>अभिनंदन! सदस्यता यशस्वीरीत्या पूर्ण झाली.</strong><br>
-        आपला कायमस्वरूपी सभासद क्रमांक: <strong>${permanentId}</strong><br>
-        <small>हा क्रमांक जतन करून ठेवा.</small>
-    `;
-
-    this.reset();
-    regMobVerified = false;
-    regEmailVerified = false;
-});
-// तात्पुरता साठा (Local Storage & OTP Simulation)
-let generatedMobOtp = "";
-let generatedEmailOtp = "";
-
-let regMobVerified = false;
-let regEmailVerified = false;
-
-// सर्वोच्च नेतृत्व OTP पाठवणे
 function sendSupremeOtp() {
     const mob = document.getElementById('supMobile').value;
     const email = document.getElementById('supEmail').value;
@@ -280,19 +222,18 @@ function sendSupremeOtp() {
     }
 
     generatedMobOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    alert(`[अधिकृत सुरक्षा OTP] आपल्या मोबाईल आणि जिमेल वर OTP पाठवला आहे: ${generatedMobOtp}`);
+    alert(`[अधिकृत सुरक्षा OTP]: ${generatedMobOtp}`);
     document.getElementById('supOtpArea').style.display = 'block';
 }
 
-// सर्वोच्च नेतृत्व लॉगिन पडताळणी
 function verifySupremeLogin() {
     const userOtp = document.getElementById('supOtpInput').value;
     if (userOtp === generatedMobOtp) {
-        alert('लॉगिन यशस्वी! सर्वोच्च नेतृत्वाचा संपूर्ण कंट्रोल आपल्या हातात आला आहे.');
+        alert('लॉगिन यशस्वी!');
         document.getElementById('supremeLoginBox').style.display = 'none';
         document.getElementById('supremeDashboard').style.display = 'block';
     } else {
-        alert('चुकीचा OTP! कृपया पुन्हा प्रयत्न करा.');
+        alert('चुकीचा OTP!');
     }
 }
 
@@ -302,7 +243,6 @@ function logoutSupreme() {
     document.getElementById('supOtpArea').style.display = 'none';
 }
 
-// पदाधिकारी OTP पाठवणे
 function sendPadOtp() {
     const mob = document.getElementById('padMobile').value;
     const email = document.getElementById('padEmail').value;
@@ -314,7 +254,7 @@ function sendPadOtp() {
     }
 
     generatedMobOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    alert(`[पदाधिकारी OTP] पाठवला आहे: ${generatedMobOtp}`);
+    alert(`[पदाधिकारी OTP]: ${generatedMobOtp}`);
     document.getElementById('padOtpArea').style.display = 'block';
 }
 
@@ -335,102 +275,6 @@ function logoutPad() {
     document.getElementById('padOtpArea').style.display = 'none';
 }
 
-// नवीन सदस्यासाठी मोबाईल OTP
-function sendRegMobileOtp() {
-    const mob = document.getElementById('regMobile').value;
-    if (mob.length !== 10) {
-        alert('कृपया योग्य १० अंकी मोबाईल नंबर टाका.');
-        return;
-    }
-    generatedMobOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    alert(`[मोबाईल OTP] ${generatedMobOtp}`);
-    document.getElementById('regMobOtpBox').style.display = 'block';
-}
-
-function verifyRegMobOtp() {
-    const val = document.getElementById('regMobOtpInput').value;
-    if (val === generatedMobOtp) {
-        regMobVerified = true;
-        alert('मोबाईल नंबर यशस्वीरीत्या सत्यापित झाला!');
-    } else {
-        alert('चुकीचा OTP!');
-    }
-}
-
-// नवीन सदस्यासाठी ईमेल OTP
-function sendRegEmailOtp() {
-    const email = document.getElementById('regEmail').value;
-    if (!email) {
-        alert('कृपया ईमेल पत्ता टाका.');
-        return;
-    }
-    generatedEmailOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    alert(`[इमेल OTP] ${generatedEmailOtp}`);
-    document.getElementById('regEmailOtpBox').style.display = 'block';
-}
-
-function verifyRegEmailOtp() {
-    const val = document.getElementById('regEmailOtpInput').value;
-    if (val === generatedEmailOtp) {
-        regEmailVerified = true;
-        alert('ईमेल यशस्वीरीत्या सत्यापित झाला!');
-    } else {
-        alert('चुकीचा OTP!');
-    }
-}
-
-// नवीन सदस्य नोंदणी फॉर्म सबमिट आणि स्वयंचलित क्रमांक निर्मिती
-document.getElementById('membershipForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    if (!regMobVerified || !regEmailVerified) {
-        alert('कृपया आधी मोबाईल आणि ईमेल OTP पडताळणी पूर्ण करा!');
-        return;
-    }
-
-    const currentYear = new Date().getFullYear();
-    const lokSabhaVal = document.getElementById('lokSabhaSelect').value.split('-')[0] || '33';
-    const vidhanSabhaVal = document.getElementById('vidhanSabhaSelect').value.split('-')[0] || '205';
-    
-    let allMembers = JSON.parse(localStorage.getItem('sssp_all_members') || '[]');
-    let seq = String(allMembers.length + 1).padStart(6, '0');
-
-    // संविधान नियमांनुसार कायमस्वरूपी सभासद क्रमांक फॉरमॅट: SSSP-YYYY-LL-VVV-NNNNNN
-    const permanentId = `SSSP-${currentYear}-${lokSabhaVal}-${vidhanSabhaVal}-${seq}`;
-
-    const newMember = {
-        memberId: permanentId,
-        fullName: document.getElementById('fullName').value,
-        mobile: document.getElementById('regMobile').value,
-        email: document.getElementById('regEmail').value,
-        category: document.getElementById('membershipCategory').value,
-        district: document.getElementById('districtSelect').value,
-        taluka: document.getElementById('talukaSelect').value,
-        village: document.getElementById('villageName').value,
-        lokSabha: document.getElementById('lokSabhaSelect').value,
-        vidhanSabha: document.getElementById('vidhanSabhaSelect').value,
-        date: new Date().toLocaleDateString('mr-IN')
-    };
-
-    allMembers.push(newMember);
-    localStorage.setItem('sssp_all_members', JSON.stringify(allMembers));
-
-    const resBox = document.getElementById('regResultBox');
-    resBox.style.display = 'block';
-    resBox.className = 'result-box success';
-    resBox.innerHTML = `
-        <strong>अभिनंदन! सदस्यता यशस्वीरीत्या पूर्ण झाली.</strong><br>
-        आपला कायमस्वरूपी सभासद क्रमांक: <strong>${permanentId}</strong><br>
-        <small>कृपया हा क्रमांक जतन करून ठेवा.</small>
-    `;
-
-    this.reset();
-    regMobVerified = false;
-    regEmailVerified = false;
-    loadAllMembersTable();
-});
-
-// सदस्य शोधणे (Search Member)
 function searchMember() {
     const query = document.getElementById('searchMemberId').value.trim();
     const resultDiv = document.getElementById('searchResult');
@@ -455,10 +299,11 @@ function searchMember() {
     }
 }
 
-// सर्व सदस्यांची यादी टेबलमध्ये दाखवणे
 function loadAllMembersTable() {
     const container = document.getElementById('allMembersTable');
     let allMembers = JSON.parse(localStorage.getItem('sssp_all_members') || '[]');
+
+    if (!container) return;
 
     if (allMembers.length === 0) {
         container.innerHTML = "<p>अजून एकही नोंदणी झालेली नाही.</p>";
@@ -488,7 +333,6 @@ function loadAllMembersTable() {
     container.innerHTML = html;
 }
 
-// पेज लोड झाल्यावर यादी लोड करणे
 window.onload = function() {
     loadAllMembersTable();
 };
