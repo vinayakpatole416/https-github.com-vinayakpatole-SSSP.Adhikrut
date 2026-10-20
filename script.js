@@ -1,3 +1,124 @@
+// Navin sadasya nondani (Registration) - Pramathik Avastha: Prabilambit (Pending)
+document.getElementById('membershipForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const currentYear = new Date().getFullYear();
+    const lokSabhaVal = document.getElementById('lokSabhaSelect').value.split('-')[0] || '33';
+    const vidhanSabhaVal = document.getElementById('vidhanSabhaSelect').value.split('-')[0] || '205';
+    
+    let allMembers = JSON.parse(localStorage.getItem('sssp_all_members') || '[]');
+    let seq = String(allMembers.length + 1).padStart(6, '0');
+
+    // Samvidhan niyamnusar temporary reference ID
+    const refId = `SSSP-REF-${Math.floor(100000 + Math.random() * 900000)}`;
+
+    const newMember = {
+        refNumber: refId,
+        memberId: "pratisksha (Pending)",
+        fullName: document.getElementById('fullName').value,
+        mobile: document.getElementById('regMobile').value,
+        email: document.getElementById('regEmail').value,
+        category: document.getElementById('membershipCategory').value,
+        district: document.getElementById('districtSelect').value,
+        taluka: document.getElementById('talukaSelect').value,
+        village: document.getElementById('villageName').value,
+        lokSabha: document.getElementById('lokSabhaSelect').value,
+        vidhanSabha: document.getElementById('vidhanSabhaSelect').value,
+        status: "Approval Sathi Prabilambit",
+        date: new Date().toLocaleDateString('mr-IN')
+    };
+
+    allMembers.push(newMember);
+    localStorage.setItem('sssp_all_members', JSON.stringify(allMembers));
+
+    const resBox = document.getElementById('regResultBox');
+    resBox.style.display = 'block';
+    resBox.className = 'result-box success';
+    resBox.innerHTML = `
+        <strong>Arj yashasviritya sadar zala!</strong><br>
+        Tumcha Sandarbha Kramank (Ref No): <strong>${refId}</strong><br>
+        <small>Supreme Leadership/Padadhikari approval dilyanantar tumhala digital card download link SMS v Email vr mileyal.</small>
+    `;
+
+    this.reset();
+});
+
+// Admin Dashboard vrun Approval dilyanantar Digital Card Generate hone
+function approveMemberAndSendCard(index) {
+    let allMembers = JSON.parse(localStorage.getItem('sssp_all_members') || '[]');
+    let currentYear = new Date().getFullYear();
+    let seq = String(index + 1).padStart(6, '0');
+    
+    // Aadhar sarkha permanent ID format: SSSP-YYYY-LL-VVV-NNNNNN
+    let permNo = `SSSP-${currentYear}-34-205-${seq}`;
+
+    allMembers[index].status = "Manjur (Approved)";
+    allMembers[index].memberId = permNo;
+
+    localStorage.setItem('sssp_all_members', JSON.stringify(allMembers));
+
+    // Simulation: Email & SMS notification with card download link
+    const member = allMembers[index];
+    alert(`[AUTOMATIC SMS & EMAIL SENT] \nPrati: ${member.mobile} & ${member.email}\nTumcha arj manjur zala ahe!\nSabhasad Kramank: ${permNo}\nDigital Card Download Link: https://vinayakpatole416.github.io/card/${permNo}`);
+
+    loadAdminDashboardTable();
+}
+
+// Aadhaar sarkha Digital Card View & Download karnyachi function
+function generateAadhaarStyleCard(memberId) {
+    let allMembers = JSON.parse(localStorage.getItem('sssp_all_members') || '[]');
+    let member = allMembers.find(m => m.memberId === memberId);
+
+    if (!member) {
+        alert('Sadasya sapadla nahi!');
+        return;
+    }
+
+    // Yenaare digital card Aadhaar sarkha disel (Bhagva & Navy blue theme)
+    const cardWindow = window.open('', '_blank');
+    cardWindow.document.write(`
+        <html lang="mr">
+        <head>
+            <title>SSSP Digital Member Card - ${member.memberId}</title>
+            <style>
+                body { font-family: Arial, sans-serif; background: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+                .aadhaar-card { width: 450px; background: #fff; border: 3px solid #12345A; border-radius: 12px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); position: relative; }
+                .card-header { background: #12345A; color: #FFC107; padding: 10px; text-align: center; border-radius: 8px 8px 0 0; }
+                .card-header h3 { margin: 0; font-size: 1rem; }
+                .card-header p { margin: 2px 0 0; font-size: 0.7rem; color: #FF6F00; font-weight: bold; }
+                .card-body { display: flex; margin-top: 15px; gap: 15px; align-items: center; }
+                .photo-box { width: 100px; height: 120px; border: 2px solid #FF6F00; background: #ddd; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; text-align: center; }
+                .info-box { font-size: 0.85rem; color: #333; line-height: 1.5; }
+                .info-box strong { color: #12345A; }
+                .card-footer { margin-top: 15px; border-top: 2px dashed #FF6F00; padding-top: 8px; text-align: center; font-size: 0.75rem; color: #555; }
+                .print-btn { display: block; width: 100%; margin-top: 15px; background: #FF6F00; color: white; border: none; padding: 10px; font-weight: bold; cursor: pointer; border-radius: 5px; }
+            </style>
+        </head>
+        <body>
+            <div class="aadhaar-card">
+                <div class="card-header">
+                    <h3>श्री शिवमल्हार स्वराज्य प्रतिष्ठान</h3>
+                    <p>राष्ट्रतत्व, हिंदुत्व, मराठीतत्व, निष्ठा, प्रतिष्ठा</p>
+                </div>
+                <div class="card-body">
+                    <div class="photo-box">Photo</div>
+                    <div class="info-box">
+                        <strong>नाव:</strong> ${member.fullName}<br>
+                        <strong>सभासद क्रमांक:</strong> ${member.memberId}<br>
+                        <strong>श्रेणी:</strong> ${member.category}<br>
+                        <strong>जिल्हा/तालुका:</strong> ${member.district}, ${member.taluka}<br>
+                        <strong>मोबाईल:</strong> ${member.mobile}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span>अधिकृत डिजिटल ओळखपत्र (विश्वस्त संस्था)</span>
+                </div>
+                <button class="print-btn" onclick="window.print()">Card Download / Print</button>
+            </div>
+        </body>
+        </html>
+    `);
+}
 // Firebase Configuration (तुमच्या Firebase अकाउंटची माहिती इथे टाकावी लागेल)
 const firebaseConfig = {
     apiKey: "YOUR_FIREBASE_API_KEY",
