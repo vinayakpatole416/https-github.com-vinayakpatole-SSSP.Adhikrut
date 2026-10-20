@@ -1,0 +1,138 @@
+:root {
+    --primary-saffron: #FF6F00;
+    --accent-yellow: #FFC107;
+    --navy-blue: #12345A;
+    --white: #FFFFFF;
+    --bg-light: #F4F6F9;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-light);
+    color: #333;
+}
+
+header {
+    background-color: var(--navy-blue);
+    color: var(--white);
+    padding: 15px 20px;
+    border-bottom: 5px solid var(--primary-saffron);
+}
+
+.logo-container h1 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: var(--accent-yellow);
+}
+
+.logo-container p {
+    margin: 3px 0 10px 0;
+    font-size: 0.9rem;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+nav a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+nav a:hover {
+    color: var(--accent-yellow);
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+.card {
+    background: var(--white);
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-top: 4px solid var(--primary-saffron);
+}
+
+h2 {
+    color: var(--navy-blue);
+    margin-top: 0;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox input {
+    width: auto;
+}
+
+.btn {
+    background-color: var(--primary-saffron);
+    color: var(--white);
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn:hover {
+    background-color: #e06200;
+}
+
+.result-box {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 4px;
+    display: none;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    background-color: var(--navy-blue);
+    color: var(--white);
+    font-size: 0.85rem;
+}
