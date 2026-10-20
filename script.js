@@ -1,7 +1,6 @@
 document.getElementById('membershipForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    // युनिक संदर्भ क्रमांक (Application Reference Number) तयार करणे
     const randomNum = Math.floor(100000 + Math.random() * 900000);
     const refNumber = `SSSP-REF-${randomNum}`;
     
@@ -14,7 +13,6 @@ document.getElementById('membershipForm').addEventListener('submit', function(e)
         <small>कृपया हा क्रमांक जतन करून ठेवा. पडताळणीनंतर अधिकृत सभासदत्व मंजूर केले जाईल.</small>
     `;
     
-    // फॉर्म रिसेट करणे
     this.reset();
     document.getElementById('state').value = 'महाराष्ट्र';
 });
