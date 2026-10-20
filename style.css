@@ -6,6 +6,10 @@
     --bg-light: #F4F6F9;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
@@ -17,38 +21,45 @@ body {
 header {
     background-color: var(--navy-blue);
     color: var(--white);
-    padding: 15px 20px;
+    padding: 15px;
     border-bottom: 5px solid var(--primary-saffron);
 }
 
 .logo-container {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 12px;
+    gap: 12px;
+    margin-bottom: 10px;
 }
 
-/* इथे लोगोची साईझ अगदी लहान आणि फिक्स केली आहे जेणेकरून तो मोठा होणार नाही */
 .site-logo {
     width: 55px !important;
     height: 55px !important;
-    min-width: 55px !important;
-    min-height: 55px !important;
+    max-width: 55px !important;
+    max-height: 55px !important;
     object-fit: cover;
     border-radius: 50%;
     border: 2px solid var(--accent-yellow);
     background-color: var(--white);
+    flex-shrink: 0;
 }
 
 .logo-text h1 {
     margin: 0;
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     color: var(--accent-yellow);
+    line-height: 1.2;
 }
 
 .logo-text p {
-    margin: 3px 0 0 0;
-    font-size: 0.85rem;
+    margin: 2px 0;
+    font-size: 0.8rem;
+}
+
+.motto {
+    font-size: 0.75rem !important;
+    color: #FFC107;
+    font-weight: bold;
 }
 
 nav ul {
@@ -57,62 +68,77 @@ nav ul {
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 8px;
 }
 
 nav a {
     color: var(--white);
     text-decoration: none;
-    font-weight: bold;
-    font-size: 0.95rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.1);
 }
 
 nav a:hover {
-    color: var(--accent-yellow);
+    background: var(--primary-saffron);
+    color: var(--white);
 }
 
 main {
-    max-width: 850px;
-    margin: 20px auto;
-    padding: 0 15px;
+    max-width: 800px;
+    margin: 15px auto;
+    padding: 0 12px;
 }
 
 .card {
     background: var(--white);
-    padding: 25px;
-    margin-bottom: 25px;
+    padding: 20px;
+    margin-bottom: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     border-top: 4px solid var(--primary-saffron);
 }
 
 h2 {
     color: var(--navy-blue);
     margin-top: 0;
+    font-size: 1.25rem;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+}
+
+.form-row {
+    display: flex;
+    gap: 10px;
+}
+
+.form-row .form-group {
+    flex: 1;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     font-weight: 600;
+    font-size: 0.85rem;
 }
 
 .form-group input, .form-group select {
     width: 100%;
-    padding: 10px;
+    padding: 8px 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
+    font-size: 0.9rem;
 }
 
 .checkbox {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .checkbox input {
@@ -123,23 +149,28 @@ h2 {
     background-color: var(--primary-saffron);
     color: var(--white);
     border: none;
-    padding: 12px 20px;
-    font-size: 1rem;
+    padding: 10px 15px;
+    font-size: 0.95rem;
     font-weight: bold;
     border-radius: 4px;
     cursor: pointer;
     width: 100%;
 }
 
+.btn-navy {
+    background-color: var(--navy-blue);
+}
+
 .btn:hover {
-    background-color: #e06200;
+    opacity: 0.9;
 }
 
 .result-box {
-    margin-top: 15px;
-    padding: 12px;
+    margin-top: 12px;
+    padding: 10px;
     border-radius: 4px;
     display: none;
+    font-size: 0.85rem;
 }
 
 .success {
@@ -157,14 +188,14 @@ h2 {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
 table, th, td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 6px 8px;
     text-align: left;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 th {
@@ -174,8 +205,8 @@ th {
 
 footer {
     text-align: center;
-    padding: 15px;
+    padding: 12px;
     background-color: var(--navy-blue);
     color: var(--white);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
