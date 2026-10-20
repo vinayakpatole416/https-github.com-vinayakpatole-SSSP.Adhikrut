@@ -1,3 +1,145 @@
+// Firebase Configuration (तुमच्या Firebase अकाउंटची माहिती इथे टाकावी लागेल)
+const firebaseConfig = {
+    apiKey: "YOUR_FIREBASE_API_KEY",
+    authDomain: "sssp-adhikrut.firebaseapp.com",
+    projectId: "sssp-adhikrut",
+    storageBucket: "sssp-adhikrut.appspot.com",
+    messagingSenderId: "1234567890",
+    appId: "1:1234567890:web:abcdef123456"
+};
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
+// RecaptchaVerifier for Phone Auth
+window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+    'size': 'invisible'
+});
+
+let confirmationResultGlobal = null;
+let regMobVerified = false;
+let regEmailVerified = false;
+
+// १. मोबाईलवर खरा SMS OTP पाठवणे (Firebase Phone Auth)
+function sendRegMobileOtp() {
+    const mobileNum = document.getElementById('regMobile').value;
+    if (mobileNum.length !== 10) {
+        alert('कृपया योग्य १० अंकी मोबाईल नंबर टाका.');
+        return;
+    }
+
+    const phoneNumber = "+91" + mobileNum;
+    const appVerifier = window.recaptchaVerifier;
+
+    firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+        .then((confirmationResult) => {
+            confirmationResultGlobal = confirmationResult;
+            alert('तुमच्या मोबाईलवर खरा SMS OTP पाठवण्यात आला आहे!');
+            document.getElementById('regMobOtpBox').style.display = 'block';
+        }).catch((error) => {
+            console.error("SMS पाठवताना त्रुटी: ", error);
+            alert('SMS पाठवण्यात अपयश आले. कृपया पुन्हा प्रयत्न करा.');
+        });
+}
+
+// मोबाईल OTP पडताळणी
+function verifyRegMobOtp() {
+    const code = document.getElementById('regMobOtpInput').value;
+    confirmationResultGlobal.confirm(code).then((result) => {
+        regMobVerified = true;
+        alert('मोबाईल नंबर यशस्वीरीत्या सत्यापित (Verified) झाला!');
+    }).catch((error) => {
+        alert('चुकीचा OTP! कृपया पुन्हा तपासा.');
+    });
+}
+
+// २. जिमेलवर (Gmail) खरा OTP पाठवणे (EmailJS द्वारे)
+function sendRegEmailOtp() {
+    const email = document.getElementById('regEmail').value;
+    if (!email) {
+        alert('कृपया वैध ईमेल पत्ता टाका.');
+        return;
+    }
+
+    const randomOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    localStorage.setItem('temp_email_otp', randomOtp);
+
+    // EmailJS द्वारे थेट जिमेलवर मेल पाठवणे
+    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+        to_email: email,
+        otp_code: randomOtp
+    }, "YOUR_PUBLIC_KEY")
+    .then((response) => {
+        alert('तुमच्या जिमेल (Gmail) पत्त्यावर OTP पाठवण्यात आला आहे!');
+        document.getElementById('regEmailOtpBox').style.display = 'block';
+    }, (error) => {
+        // जर EmailJS सेट नसेल तर इमर्जन्सीसाठी लोकल अलर्ट
+        alert(`[जिमेल OTP]: ${randomOtp} (EmailJS कॉन्फिगर करा)`);
+        document.getElementById('regEmailOtpBox').style.display = 'block';
+    });
+}
+
+// ईमेल OTP पडताळणी
+function verifyRegEmailOtp() {
+    const userOtp = document.getElementById('regEmailOtpInput').value;
+    const savedOtp = localStorage.getItem('temp_email_otp');
+
+    if (userOtp === savedOtp) {
+        regEmailVerified = true;
+        alert('ईमेल यशस्वीरीत्या सत्यापित (Verified) झाला!');
+    } else {
+        alert('चुकीचा ईमेल OTP!');
+    }
+}
+
+// ३. नवीन सदस्य नोंदणी आणि कायमस्वरूपी क्रमांक निर्मिती
+document.getElementById('membershipForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    if (!regMobVerified || !regEmailVerified) {
+        alert('कृपया फॉर्म भरण्यापूर्वी मोबाईल आणि ईमेलची OTP पडताळणी पूर्ण करा!');
+        return;
+    }
+
+    const currentYear = new Date().getFullYear();
+    const lokSabhaVal = document.getElementById('lokSabhaSelect').value.split('-')[0] || '33';
+    const vidhanSabhaVal = document.getElementById('vidhanSabhaSelect').value.split('-')[0] || '205';
+    
+    let allMembers = JSON.parse(localStorage.getItem('sssp_all_members') || '[]');
+    let seq = String(allMembers.length + 1).padStart(6, '0');
+
+    // संविधान नियमांनुसार कायमस्वरूपी सभासद क्रमांक
+    const permanentId = `SSSP-${currentYear}-${lokSabhaVal}-${vidhanSabhaVal}-${seq}`;
+
+    const newMember = {
+        memberId: permanentId,
+        fullName: document.getElementById('fullName').value,
+        mobile: document.getElementById('regMobile').value,
+        email: document.getElementById('regEmail').value,
+        category: document.getElementById('membershipCategory').value,
+        district: document.getElementById('districtSelect').value,
+        taluka: document.getElementById('talukaSelect').value,
+        village: document.getElementById('villageName').value,
+        date: new Date().toLocaleDateString('mr-IN')
+    };
+
+    allMembers.push(newMember);
+    localStorage.setItem('sssp_all_members', JSON.stringify(allMembers));
+
+    const resBox = document.getElementById('regResultBox');
+    resBox.style.display = 'block';
+    resBox.className = 'result-box success';
+    resBox.innerHTML = `
+        <strong>अभिनंदन! सदस्यता यशस्वीरीत्या पूर्ण झाली.</strong><br>
+        आपला कायमस्वरूपी सभासद क्रमांक: <strong>${permanentId}</strong><br>
+        <small>हा क्रमांक जतन करून ठेवा.</small>
+    `;
+
+    this.reset();
+    regMobVerified = false;
+    regEmailVerified = false;
+});
 // तात्पुरता साठा (Local Storage & OTP Simulation)
 let generatedMobOtp = "";
 let generatedEmailOtp = "";
