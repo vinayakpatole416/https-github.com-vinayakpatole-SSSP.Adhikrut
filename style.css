@@ -21,15 +21,34 @@ header {
     border-bottom: 5px solid var(--primary-saffron);
 }
 
-.logo-container h1 {
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+/* इथे लोगोची साईझ अगदी लहान आणि फिक्स केली आहे जेणेकरून तो मोठा होणार नाही */
+.site-logo {
+    width: 55px !important;
+    height: 55px !important;
+    min-width: 55px !important;
+    min-height: 55px !important;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--accent-yellow);
+    background-color: var(--white);
+}
+
+.logo-text h1 {
     margin: 0;
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     color: var(--accent-yellow);
 }
 
-.logo-container p {
-    margin: 3px 0 10px 0;
-    font-size: 0.9rem;
+.logo-text p {
+    margin: 3px 0 0 0;
+    font-size: 0.85rem;
 }
 
 nav ul {
