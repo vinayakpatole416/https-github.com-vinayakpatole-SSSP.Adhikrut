@@ -3,32 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>श्री शिवमल्हार स्वराज्य प्रतिष्ठान - विश्वस्त संस्था (SSSP Adhikrut)</title>
+    <title>श्री शिवमल्हार स्वराज्य प्रतिष्ठान - विश्वस्त संस्था</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Firebase SDKs for Automatic Cloud Database -->
+    <!-- Firebase SDKs for OTP & Database -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
+    <!-- Header Navigation -->
     <header>
         <div class="logo-container">
-            <!-- लोगोची इमेज जोडली आहे -->
-            <img src="aapla_pratishthan-20260816-0001.jpg" alt="श्री शिवमल्हार स्वराज्य प्रतिष्ठान लोगो" class="site-logo">
+            <img src="aapla_pratishthan-20260816-0001.jpg" alt="लोहो" class="site-logo">
             <div class="logo-text">
                 <h1>श्री शिवमल्हार स्वराज्य प्रतिष्ठान</h1>
-                <p>विश्वस्त संस्था | SSSP Adhikrut Portal</p>
+                <p>— विश्वस्त संस्था —</p>
+                <p class="motto">राष्ट्रतत्व, हिंदुत्व, मराठीतत्व, निष्ठा, प्रतिष्ठा</p>
             </div>
         </div>
         <nav>
             <ul>
                 <li><a href="#home">मुख्यपृष्ठ</a></li>
-                <li><a href="#about">संस्थेविषयी</a></li>
-                <li><a href="#register">सदस्यत्व नोंदणी अर्ज</a></li>
-                <li><a href="#status">अर्जाची स्थिती तपासा</a></li>
+                <li><a href="#register">नवीन सदस्य नोंदणी</a></li>
+                <li><a href="#members-list">सदस्य यादी</a></li>
+                <li><a href="#status">अर्जाची स्थिती</a></li>
+                <li><a href="#leadership">सर्वोच्च नेतृत्व</a></li>
+                <li><a href="#officedesk">पदाधिकारी डॅशबोर्ड</a></li>
                 <li><a href="#contact">संपर्क</a></li>
-                <li><a href="#privacy">गोपनीयता धोरण</a></li>
-                <li><a href="#admin" style="color: var(--accent-yellow);">ॲडमिन लॉगिन</a></li>
             </ul>
         </nav>
     </header>
@@ -36,17 +38,17 @@
     <main>
         <!-- Home Section -->
         <section id="home" class="card">
-            <h2>संस्थेचे अधिकृत पोर्टल</h2>
-            <p>संस्थेचे संघटनात्मक, प्रशासकीय, सामाजिक व जनकल्याणकारी कार्यासाठी अधिकृत डिजिटल व्यासपीठ.</p>
+            <h2>संस्थेचे अधिकृत डिजिटल पोर्टल</h2>
+            <p>संस्थेचे संघटनात्मक, प्रशासकीय, सामाजिक व जनकल्याणकारी कार्यासाठी अधिकृत व्यासपीठ.</p>
         </section>
 
-        <!-- Membership Registration Form -->
+        <!-- New Membership Registration -->
         <section id="register" class="card">
-            <h2>सदस्यत्व नोंदणी अर्ज</h2>
+            <h2>नवीन सदस्य नोंदणी अर्ज</h2>
             <form id="membershipForm">
                 <div class="form-group">
                     <label>संपूर्ण नाव *</label>
-                    <input type="text" id="fullName" required>
+                    <input type="text" id="fullName" required placeholder="उदा. राहुल बाळू पाटोळे">
                 </div>
 
                 <div class="form-group">
@@ -66,32 +68,34 @@
 
                 <div class="form-group">
                     <label>ईमेल *</label>
-                    <input type="email" id="email" required>
+                    <input type="email" id="email" required placeholder="example@gmail.com">
                 </div>
 
-                <div class="form-group">
-                    <label>गाव *</label>
-                    <input type="text" id="village" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>गाव *</label>
+                        <input type="text" id="village" required>
+                    </div>
+                    <div class="form-group">
+                        <label>तालुका *</label>
+                        <input type="text" id="taluka" required>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>तालुका *</label>
-                    <input type="text" id="taluka" required>
-                </div>
-
-                <div class="form-group">
-                    <label>जिल्हा *</label>
-                    <input type="text" id="district" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>जिल्हा *</label>
+                        <input type="text" id="district" required>
+                    </div>
+                    <div class="form-group">
+                        <label>पिन कोड *</label>
+                        <input type="text" id="pincode" pattern="[0-9]{6}" required>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label>राज्य *</label>
                     <input type="text" id="state" value="महाराष्ट्र" readonly>
-                </div>
-
-                <div class="form-group">
-                    <label>पिन कोड *</label>
-                    <input type="text" id="pincode" pattern="[0-9]{6}" required>
                 </div>
 
                 <div class="form-group">
@@ -122,51 +126,77 @@
             <div id="applicationResult" class="result-box"></div>
         </section>
 
+        <!-- Members Search & List Section -->
+        <section id="members-list" class="card">
+            <h2>नोंदणीकृत सदस्य यादी</h2>
+            <div class="form-group">
+                <input type="text" id="searchMember" placeholder="नाव, गाव किंवा मोबाईल नंबर द्वारे शोधा..." onkeyup="filterMembers()">
+            </div>
+            <div id="membersTableContainer" style="overflow-x:auto;">
+                <!-- Members list loaded dynamically -->
+            </div>
+        </section>
+
         <!-- Status Check Section -->
         <section id="status" class="card">
             <h2>अर्जाची स्थिती तपासा</h2>
             <div class="form-group">
-                <label>अर्ज संदर्भ क्रमांक (Application Reference Number):</label>
-                <input type="text" id="refNumber" placeholder="उदा. SSSP-REF-123456">
+                <label>अर्ज संदर्भ क्रमांक टाка:</label>
+                <input type="text" id="refNumberInput" placeholder="उदा. SSSP-REF-123456">
             </div>
-            <button onclick="checkStatus()" class="btn">स्थिती तपासा</button>
-            <div id="statusResult" class="result-box"></div>
+            <button onclick="checkApplicationStatus()" class="btn">स्थिती तपासा</button>
+            <div id="statusResultBox" class="result-box"></div>
         </section>
 
-        <!-- Admin Section -->
-        <section id="admin" class="card">
-            <h2>संस्थापक / प्रशासक डॅशबोर्ड</h2>
-            <div id="adminLoginArea">
+        <!-- Supreme Leadership (Founder Login) -->
+        <section id="leadership" class="card">
+            <h2>सर्वोच्च नेतृत्व (संस्थापक-प्रमुख व उपप्रमुख डॅशबोर्ड)</h2>
+            <p><small>सुरक्षित प्रवेश: मोबाईल नंबरवर OTP द्वारे आणि Gmail नियंत्रणासह.</small></p>
+            <div id="founderLoginArea">
                 <div class="form-group">
-                    <label>ॲडमिन पासवर्ड टाका:</label>
-                    <input type="password" id="adminPass" placeholder="Password">
+                    <label>संस्थापक मोबाईल नंबर / ईमेल टाका:</label>
+                    <input type="text" id="founderIdInput" placeholder="मोबाइल किंवा ईमेल">
                 </div>
-                <button onclick="adminLogin()" class="btn">लॉगिन करा</button>
+                <button onclick="sendFounderOTP()" class="btn btn-navy">OTP पाठवा</button>
+                <div id="founderOtpBox" style="display:none; margin-top:10px;">
+                    <input type="text" id="founderOtpInput" placeholder="६ अंकी OTP टाка">
+                    <button onclick="verifyFounderOTP()" class="btn" style="margin-top:5px;">लॉगिन सत्यापित करा</button>
+                </div>
             </div>
-            <div id="adminDashboard" style="display:none; margin-top:15px;">
-                <h3>प्राप्त झालेले सदस्य अर्ज</h3>
-                <button onclick="loadAdminApplications()" class="btn" style="background:#12345A; margin-bottom:10px;">यादी रिफ्रेश करा</button>
-                <div id="adminTableContainer" style="overflow-x:auto;"></div>
+            <div id="founderDashboard" style="display:none; margin-top:15px;">
+                <h3>संस्थापक नियंत्रण कक्ष (Admin Control)</h3>
+                <button onclick="loadFounderPendingApps()" class="btn btn-navy" style="margin-bottom:10px;">प्रलंबित अर्ज तपासा</button>
+                <div id="founderTableContainer" style="overflow-x:auto;"></div>
             </div>
         </section>
 
-        <!-- About Section -->
-        <section id="about" class="card">
-            <h2>संस्थेविषयी</h2>
-            <p><strong>श्री शिवमल्हार स्वराज्य प्रतिष्ठान — विश्वस्त संस्था</strong></p>
-            <p>संस्था समाजसेवा, जनकल्याण, शिक्षण, कौशल्यविकास आणि सामाजिक घटकांच्या सक्षमीकरणासाठी कार्यरत आहे.</p>
+        <!-- Office Bearers Section -->
+        <section id="officedesk" class="card">
+            <h2>पदाधिकारी डॅशबोर्ड (Office Bearers Login)</h2>
+            <p><small>केवळ अधिकृत पदाधिकाऱ्यांसाठी OTP द्वारे सुरक्षित प्रवेश.</small></p>
+            <div id="bearerLoginArea">
+                <div class="form-group">
+                    <label>पदाधिकारी मोबाईल नंबर टाका:</label>
+                    <input type="tel" id="bearerMobileInput" placeholder="१० अंकी मोबाईल नंबर">
+                </div>
+                <button onclick="sendBearerOTP()" class="btn btn-navy">OTP मिळवा</button>
+                <div id="bearerOtpBox" style="display:none; margin-top:10px;">
+                    <input type="text" id="bearerOtpInput" placeholder="OTP टाका">
+                    <button onclick="verifyBearerOTP()" class="btn" style="margin-top:5px;">लॉगिन करा</button>
+                </div>
+            </div>
+            <div id="bearerDashboard" style="display:none; margin-top:15px;">
+                <h3>पदाधिकारी कार्य डॅशबोर्ड</h3>
+                <p>आपल्या अधिकारक्षेत्रातील सभासदांची माहिती व पडताळणी कक्ष.</p>
+                <div id="bearerContent"></div>
+            </div>
         </section>
 
         <!-- Contact Section -->
         <section id="contact" class="card">
             <h2>संपर्क</h2>
-            <p>अधिकृत चौकशी आणि संवादासाठी कृपया संस्थेच्या मध्यवर्ती कार्यालयाशी संपर्क साधावा.</p>
-        </section>
-
-        <!-- Privacy Policy Section -->
-        <section id="privacy" class="card">
-            <h2>गोपनीयता धोरण</h2>
-            <p>अर्जदारांची माहिती केवळ संस्थेच्या प्रशासकीय वापरासाठी सुरक्षित ठेवली जाते.</p>
+            <p><strong>श्री शिवमल्हार स्वराज्य प्रतिष्ठान — विश्वस्त संस्था</strong></p>
+            <p>अधिकृत चौकशी आणि संवादासाठी मध्यवर्ती कार्यालयाशी संपर्क साधावा.</p>
         </section>
     </main>
 
